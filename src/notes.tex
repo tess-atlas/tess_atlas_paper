@@ -1,0 +1,157 @@
+orbital period, 𝑃
+the time of inferior conjunction, 𝑡0
+the planet radius 𝑅𝑝, given as a fraction of the host radius, 𝑅★
+the semi-major axis of the planet orbit, 𝑎;
+the orbital inclination, 𝑖
+the orbital eccentricity, 𝑒
+the longitude of periastron, 𝜔
+a set of limb-darkening coefficient $u_1, u_2$
+
+
+
+
+% FROM Celerite paper
+In Equation (3) the physical parameters of the exoplanet are called θ and, in this
+example, the mean function µθ(t) is a limb-darkened transit light curve (Mandel &
+Agol 2002; Foreman-Mackey & Morton 2016) and the parameters θ are the orbital
+period Porb, the transit duration T, the phase or epoch t0, the impact parameter b,
+the radius of the planet in units of the stellar radius Rp /Rs, the baseline relative flux
+of the light curve f0, and two parameters describing the limb-darkening profile of the
+star (Claret & Bloemen 2011; Kipping 2013). As in Section 6.3, we model the stellar
+variability using a GP model with a kernel given by Equation (56) and fit for the
+parameters of the exoplanet θ and the stellar variability α simultaneously. The full
+set of parameters α and θ are listed in Table 5 along with their priors and the true
+values for θ.
+
+We take a 20 day segment of the Kepler light curve for KIC 1430163 (N = 1000) and
+multiply it by a simulated transit model with the parameters listed in Table 5.
+Using
+these data, we maximize the joint posterior defined by the likelihood in Equation (3)
+and the priors in Table 5 using L-BFGS-B for all the parameters α and θ simultaneously.
+The top panel of Figure 11 shows the data including the simulated transit as black
+points with the MAP model prediction over-plotted in blue. The bottom panel
+of Figure 11 shows the “de-trended” light curve where the MAP model has been
+subtracted and the MAP mean model µθ has been added back in. For comparison, the
+transit model is over-plotted in the bottom panel of Figure 11 and we see no obvious
+correlations in the residuals.
+
+Sampling 32 walkers from an isotropic Gaussian centered on the MAP parameters,
+we run 10000 steps of burn-in and 30000 steps of production MCMC using emcee.
+We estimate the integrated autocorrelation time for the ln(Porb) chain and find
+1490 effective samples across the full chain. Figure 12 shows the marginalized posterior
+constraints on the physical properties of the planet compared to the true values. Even
+though the celerite representation of the stellar variability is only an effective model,
+the inferred distributions for the physical properties of the planet θ are consistent
+with the true values. This promising result suggests that celerite can be used as an
+
+
+
+% NEMISIS
+To model the transits of TCEs denoted as planet candidates
+following the vetting process described in 4.2, we employ the
+use of the exoplanet Python package (Foreman-Mackey et al.
+2020), and model various transits in each step of our Markov
+Chain Monte Carlo (MCMC) simulation. To model transits
+in general, exoplanet uses an analytical transit model,
+computed via the STARRY Python package (Luger et al. 2019).
+Our noise model contains the following free parameters: the
+orbital period P, time of mid-transit T0, planet-to-star radius
+ratio RP/RS and impact parameter b. To define our prior distributions
+for the orbital period, we use a log-normal distribution with a mean value set
+to the TLS-detected period, and a
+standard deviation set to the TLS period error. For the prior
+distributions used for the mid-transit time, we use a normal
+distribution, with the mean value set to the TLS transit time,
+and the standard deviation set to the TLS transit duration. For
+our prior distribution of planet-to-star radius ratio, we use a
+uniform distribution ranging from 0.01 to RP/RS + σRP/RS.
+To calculate the uncertainty for the planet-to-star radius ratio,
+σRP/RS, we query the TIC to obtain the stellar radius and its
+uncertainty (RS, σRS), and propagate the errors of the stellar radius, along with the planet radius uncertainty (σRP ) as
+measured by TLS:
+
+To define our prior distributions for quadratic limbdarkening coefficients
+and the impact parameter, we utilize the
+distributions available within the exoplanet package. To
+determine the fiducial prior distribution for quadratic limbdarkening coefficients,
+we use a reparameterization of the
+two-parameter limb-darkening model to allow for efficient
+and uninformative sampling, as implemented by Kipping
+(2013). For the prior distributions of the impact parameter, we
+utilize a uniform distribution ranging from 0.01 to 1+RP/RS.
+Our adopted model parameter priors are listed in Table 2. For
+each transit model produced in the MCMC analysis, we oversample the light curve
+on a fine time grid, and numerically
+integrate over the exposure window to avoid smearing of the
+light curve due to TESS FFI’s 30-minute cadence.
+An initial maximum a posteriori (MAP) solution was found,
+and used to initialize the parameters sampled with an MCMC
+analysis. The MCMC sampling was performed using the No
+U-Turns step method (Hoffman & Gelman 2014). We ran
+four chains with 10,000 tuning steps (tuning samples were
+discarded), and 12,500 draws with a target acceptance of 99%,
+for a final chain length of 50,000 in each parameter. Once
+all our runs had been sampled, we then converted our posterior distributions
+of planet-to-star radius ratio to planet radii in
+Earth units. An example of the final posterior distributions for
+our free parameters, together with the median transit model
+from our MCMC analysis, can be seen in Figures 10 and 11
+for TOI 270 c (TIC 259377017).
+
+% Kepler Cat
+
+%% Transit model
+
+We modeled the observed transits with Q1-Q17 long- cadence photometry downloaded from the
+MAST27 archive. The photometry includes systematic corrections for instrumental trends and
+estimates of dilution due to other stars that may contaminate the photometric aper- ture
+(Stumpe et al. 2014). The median value of light contamination for validated Kepler planets
+is ∼5\% (Rowe et al. 2014).
+We do not attempt to compensate for stellar binarity,
+thus in cases such as KOI-1422 (Kepler-296) our reported planetary radius is
+underestimated (Lissauer et al. 2014; Star et al. 2014).
+
+We adopted the photometric model described in §4 of Rowe et al. (2014)
+which uses a quadratic limb-darkened model described by the analytic
+model of Mandel & Agol (2002) and non-interacting Keplerian orbits.
+We account for gravitational interactions of planetary orbits by mea- suring
+transit-timing variations (TTVs) and including the effects in our transit models as
+described in §4.2 of Rowe et al. (2014). Measured TTVs for all KOIs are listed in Table 2.
+The model was parameterized by the mean-stellar density (ρ⋆),
+photometric zero point and for each planet (n) an epoch (T0n), period (Pn),
+scaled plan- etary radius (Rp /R⋆ n ) and impact parameter (bn ).
+The scaled semi-major axis for each planet candidate is esti- mated by
+$$(a/R_s)^3 \sim \rho_s GP^2 / 3\pi$$
+It is important to note that Equation 2 assumes that the sum of the planetary masses
+is much less than the mass of the host star. For a 0.1 M⊙ companion of a Sun-like star,
+a systematic error of 2\% is incurred on the determination of ρ⋆
+
+To model the light curve, we applied a polynomial filter to the PDC
+flux corrected aperture photometry as described in §4 of Rowe et al. (2014).
+This filter strongly affects all signals with timescales less than 2 days and is
+destructive to the shape of a planetary transit, thus we masked out all observations
+taken within 1 transit- duration of the measured center of the transit time and used
+an extrapolation of the polynomial filter. A best fit model was calculated by a
+Levenberg-Marquardt chi- square minimization routine (More et al. 1980) and in- cluded
+TTVs when necessary. In the case of light curves that display multiple transiting candidates,
+we produce a light-curve for each individual candidate where the tran- sits of the
+other planets were removed using our multi- planet model.
+We then fit each planet individually with this light curve and use the resulting
+calculation to seed our Markov Chain Monte Carlo (MCMC) routines to measure fundamental
+physical properties of each planet.
+
+
+% model parameters and posterior distributions
+Our measured planetary parameters are listed in Ta- ble 4 and are based on our transit model fits and MCMC analysis. For multi-planet systems, each tran- siting planet is fitted independently . We assumed a cir- cular orbit and fit for T0, P, b, Rp/R⋆ and ρc, where ρc is the value of ρ⋆ when a circular orbit is assumed. Thus, each planet candidate provides an independent measure- ment of ρc. If the value of ρc is statistically the same for each planet candidate, then the planetary system is con- sistent with each planet being in a circular orbit around the same host star.
+To estimate the posterior distribution on each fitted parameter, we use a MCMC approach similar to the procedure outlined in Ford (2005) and implemented in Rowe et al. (2014). Our algorithm uses a Gibbs sam- pler to shuffle the value of parameters for each step of the MCMC procedure with a control set of parameters to approximate the scale and orientation for the jumping distribution of correlated parameters as outlined in Gre- gory (2011). Our method allows the MCMC approach to efficiently sample parameter space even with highly cor- related model parameters. We generated Markov Chains with lengths of 100000 for each PC. The first 20% of each chain was discarded as burn-in and the remaining
+
+sets were combined and used to calculate the median, standard deviation and 1σ bounds of the distribution centered on the median of each modeled parameter. Our model fits and uncertainties are reported in Table 4. We use the Markov Chains to derive model dependent mea- surements of the transit depth (Tdep) and transit dura- tion (Tdur). The transit depth posterior was estimated
+
+by calculating the transit model at the center of tran- sit time (T0) for each set of parameters in the Markov Chain. We also convolve the transit model parameters with the stellar parameters (see §4.1) to compute the planetary radius, Rp, and the flux received by the planet relative to the Earth (S). To compute the transit dura- tion, we used Equation 3 from Seager & Mall ́en-Ornelas (2003) for a circular orbit,
+$$Tdur = stuff$$
+
+which defines the transit duration as the time from first to last contact. We estimate the ratio of incident flux received by the planet relative to the Earth’s incident
+flux,
+$$S = stuff$$
+where Teff is the effective temperature of host star, Teff⊙ is the temperature of the Sun, a⊕ is the Earth-Sun sep- aration and a is the semi-major axis of the planet calcu- lated with Kepler’s Third Law using the measured orbital period and estimated stellar mass.
+We attempted a MCMC analysis on all KOIs, but, there are scenarios when our algorithm failed, such as when the S/N of the transit was very low (typically be- low ∼7). In these cases, such as KOI-5.02 which is a false alarm (FA), we only report best-fit models in Ta- ble 4. There are no PCs without reported uncertainties. Figure 8 shows an example of two parameters, S and Rp with uncertainties derived from our MCMC analysis. It is common for parameters to have high asymmetric error bars.
